@@ -1,3 +1,4 @@
+data/
 yelp_dataset/
 Dockerfile
 all_reviews.csv
