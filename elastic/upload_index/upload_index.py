@@ -3,11 +3,10 @@
 
 from elasticsearch import Elasticsearch
 import pandas as pd
-import numpy as np
-# from elasticsearch.helpers import bulk
 import os
 from ast import literal_eval
 
+# TODO: change path for docker
 os.chdir("/Users/maksim/Documents/VSE/5. Semester/Text Analytics 2/semantic_search_restaurant")
 
 # Read your CSV file into a Pandas DataFrame
