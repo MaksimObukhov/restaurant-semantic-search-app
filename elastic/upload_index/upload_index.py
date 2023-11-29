@@ -1,5 +1,6 @@
 # попробовать сделать поиск через reviews_elastic.csv, где: id, np_embeddings
 # или попробовать побъеденить все отзывы в нестед джсон и закинуть в эластик, чтобы искал по одному большому полю
+# создать general_sentiment поле в бизнес дф, где будет информация о категории ресторана, вайбе, еде и тд (из схемы)
 
 from elasticsearch import Elasticsearch
 import pandas as pd
