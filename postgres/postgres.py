@@ -5,7 +5,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 # Load variables from .env into the environment
-load_dotenv()
+# load_dotenv()
 
 # Database credentials
 user = os.getenv('POSTGRES_USER')

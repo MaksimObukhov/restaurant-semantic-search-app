@@ -4,9 +4,20 @@ from sentence_transformers import SentenceTransformer
 from ast import literal_eval
 import pandas as pd
 import numpy as np
+import psycopg2
+from psycopg2 import extras
+import os
 
 app = FastAPI()
 es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
+
+pg_config = {
+    'user': os.getenv('POSTGRES_USER'),
+    'password': os.getenv('POSTGRES_PASSWORD'),
+    'host': os.getenv('POSTGRES_HOST'),
+    'port': os.getenv('POSTGRES_PORT'),
+    'dbname': os.getenv('POSTGRES_DB')
+}
 
 
 df = pd.read_csv('data/reviews_elastic_sample.csv')
@@ -16,11 +27,6 @@ df['np_embeddings'] = df['np_embeddings'].apply(literal_eval)
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Restaurant Search API!"}
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "OK"}
 
 
 class Tokenizer(object):
@@ -71,6 +77,25 @@ async def get_business(business_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# Function to query PostgreSQL
+def get_restaurant_info_from_pg(business_id: str):
+    try:
+        conn = psycopg2.connect(**pg_config)
+        cursor = conn.cursor(cursor_factory=extras.RealDictCursor)
+
+        query = "SELECT * FROM business_table WHERE business_id = %s"
+        cursor.execute(query, (business_id,))
+        restaurant_info = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return restaurant_info
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error querying PostgreSQL: {str(e)}")
+
+
 helper_token = Tokenizer(model_name='all-mpnet-base-v2')
 
 
@@ -92,8 +117,18 @@ async def search_businesses(query: str):
         result = es.search(index=index_name, knn=knn_query, request_timeout=55)
 
         # Extract relevant information from the result
-        hits = result['hits']['hits']
-        return [{'business_id': hit['_source']['business_id'], 'score': hit['_score']} for hit in hits]
+        results_dict = [{'business_id': hit['_source']['business_id'],
+                         'score': hit['_score']}
+                        for hit in result['hits']['hits']]
+
+        for business in results_dict:
+            business['restaurant_info'] = get_restaurant_info_from_pg(business['business_id'])
+        return results_dict
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "OK"}

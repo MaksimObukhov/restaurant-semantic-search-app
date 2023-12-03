@@ -5,9 +5,6 @@ import requests
 API_URL = "http://elastic_py:8080"
 
 
-# API_URL = "http://0.0.0.0:8080"
-
-
 def upload_business():
     url = f"{API_URL}/upload_data"
     response = requests.post(url)
@@ -22,12 +19,6 @@ def get_business(business_id):
 
 def search_businesses(query):
     url = f"{API_URL}/search/{query}"
-    response = requests.get(url)
-    return response.json()
-
-
-def health_check():
-    url = f"{API_URL}/health"
     response = requests.get(url)
     return response.json()
 
