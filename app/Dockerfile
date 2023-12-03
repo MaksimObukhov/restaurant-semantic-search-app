@@ -10,8 +10,4 @@ COPY ./app/ ./app/
 # Install the dependencies
 RUN pip install --no-cache-dir --upgrade -r ./app/requirements.txt
 
-COPY ./data/reviews_elastic_sample.csv ./data/reviews_elastic_sample.csv
-
-EXPOSE 8080
-
-CMD ["uvicorn", "app.test:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["streamlit", "run", "app/frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]

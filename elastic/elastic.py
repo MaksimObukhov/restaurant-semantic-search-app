@@ -18,6 +18,11 @@ async def root():
     return {"message": "Welcome to the Restaurant Search API!"}
 
 
+@app.get("/health")
+async def health_check():
+    return {"status": "OK"}
+
+
 class Tokenizer(object):
     def __init__(self, model_name):
         self.model_name = model_name
@@ -69,7 +74,7 @@ async def get_business(business_id: str):
 helper_token = Tokenizer(model_name='all-mpnet-base-v2')
 
 
-@app.get("/search_test/{query}")
+@app.get("/search/{query}")
 async def search_businesses(query: str):
     try:
         # Get token vector for the input query

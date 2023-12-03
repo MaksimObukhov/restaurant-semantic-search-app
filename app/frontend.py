@@ -2,13 +2,16 @@ import streamlit as st
 import requests
 
 # Elasticsearch server URL
-API_URL = "http://localhost:8080"
+API_URL = "http://elastic_py:8080"
 
-# def add_business(business_id):
-#     url = f"{API_URL}/{index_name}/add"
-#     data = {"business_id": business_id}
-#     response = requests.post(url, json=data)
-#     return response.json()
+
+# API_URL = "http://0.0.0.0:8080"
+
+
+def upload_business():
+    url = f"{API_URL}/upload_data"
+    response = requests.post(url)
+    return response.json()
 
 
 def get_business(business_id):
@@ -23,14 +26,19 @@ def search_businesses(query):
     return response.json()
 
 
+def health_check():
+    url = f"{API_URL}/health"
+    response = requests.get(url)
+    return response.json()
+
+
 st.title("Elasticsearch Restaurant Search")
 
 # Add Business Form
-# st.header("Add Business")
-# business_id = st.text_input("Business ID")
-# if st.button("Add Business"):
-#     result = add_business(business_id)
-#     st.success(result["message"])
+st.header("Upload Data")
+if st.button("Upload"):
+    result = upload_business()
+    st.success(result["message"])
 
 # Get Business by ID
 st.header("Get Business by ID")

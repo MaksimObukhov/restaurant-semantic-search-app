@@ -68,11 +68,15 @@ services:
     container_name: app_py
     build:
       dockerfile: app/Dockerfile
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
+    depends_on:
+      - elastic_py
     ports:
-      - "8080:8080"
+      - "8501:8501"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1" ]
+      interval: 20s
+      timeout: 5s
+      retries: 3
 
 #  volumes:
 #    elasticsearch-data:
