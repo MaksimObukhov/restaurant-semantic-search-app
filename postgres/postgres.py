@@ -1,11 +1,7 @@
 import os
 from sqlalchemy import create_engine, MetaData, text, inspect
-import psycopg2
 import pandas as pd
-from dotenv import load_dotenv
 
-# Load variables from .env into the environment
-# load_dotenv()
 
 # Database credentials
 user = os.getenv('POSTGRES_USER')
