@@ -15,7 +15,7 @@ df['np_embeddings'] = df['np_embeddings'].apply(literal_eval)
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Restaurant Search API!"}
+    return {"message": "test"}
 
 
 class Tokenizer(object):

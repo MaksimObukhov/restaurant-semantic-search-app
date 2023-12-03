@@ -10,4 +10,8 @@ COPY ./app/ ./app/
 # Install the dependencies
 RUN pip install --no-cache-dir --upgrade -r ./app/requirements.txt
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+COPY ./data/reviews_elastic_sample.csv ./data/reviews_elastic_sample.csv
+
+EXPOSE 8080
+
+CMD ["uvicorn", "app.test:app", "--host", "0.0.0.0", "--port", "8080"]

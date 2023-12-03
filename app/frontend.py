@@ -2,25 +2,23 @@ import streamlit as st
 import requests
 
 # Elasticsearch server URL
-ELASTICSEARCH_URL = "http://localhost:8000"
+API_URL = "http://localhost:8080"
 
-index_name = 'restaurant_search'
-
-def add_business(business_id):
-    url = f"{ELASTICSEARCH_URL}/{index_name}/add"
-    data = {"business_id": business_id}
-    response = requests.post(url, json=data)
-    return response.json()
+# def add_business(business_id):
+#     url = f"{API_URL}/{index_name}/add"
+#     data = {"business_id": business_id}
+#     response = requests.post(url, json=data)
+#     return response.json()
 
 
 def get_business(business_id):
-    url = f"{ELASTICSEARCH_URL}/{index_name}/{business_id}"
+    url = f"{API_URL}/{business_id}"
     response = requests.get(url)
     return response.json()
 
 
 def search_businesses(query):
-    url = f"{ELASTICSEARCH_URL}/{index_name}/search?query={query}"
+    url = f"{API_URL}/search/{query}"
     response = requests.get(url)
     return response.json()
 
@@ -28,11 +26,11 @@ def search_businesses(query):
 st.title("Elasticsearch Restaurant Search")
 
 # Add Business Form
-st.header("Add Business")
-business_id = st.text_input("Business ID")
-if st.button("Add Business"):
-    result = add_business(business_id)
-    st.success(result["message"])
+# st.header("Add Business")
+# business_id = st.text_input("Business ID")
+# if st.button("Add Business"):
+#     result = add_business(business_id)
+#     st.success(result["message"])
 
 # Get Business by ID
 st.header("Get Business by ID")
