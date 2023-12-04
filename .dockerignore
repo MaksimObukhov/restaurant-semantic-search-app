@@ -1,0 +1,4 @@
+data/yelp_dataset/
+data/all_reviews.csv
+data/embeddings.npy
+data/reviews_elastic.csv

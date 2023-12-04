@@ -5,15 +5,15 @@ FROM python:3.11
 WORKDIR /restaurant_search
 
 # Copy the requirements file into the container
-COPY ./postgres/ ./postgres/
+COPY ./elastic/ ./elastic/
 
 # Install the dependencies
-RUN pip install --no-cache-dir --upgrade -r ./postgres/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r ./elastic/requirements.txt
 
 # Copy the rest of the application code into the container
-COPY ./data/businesses_postgres.csv ./data/businesses_postgres.csv
-COPY ./data/reviews_postgres.csv ./data/reviews_postgres.csv
-COPY ./.env /.env
+COPY ./data/reviews_elastic_sample.csv ./data/reviews_elastic_sample.csv
+
+EXPOSE 8080
 
 # Command to run your application
-CMD ["python", "postgres/postgres.py"]
+CMD ["uvicorn", "elastic.elastic:app", "--host", "0.0.0.0", "--port", "8080"]
