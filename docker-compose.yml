@@ -2,13 +2,11 @@ version: '3'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: elasticsearch
+    container_name: es01
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
-#    volumes:
-#      - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     healthcheck:
@@ -17,74 +15,40 @@ services:
       timeout: 5s
       retries: 3
 
-#  kibana:
-#    image: docker.elastic.co/kibana/kibana:8.11.0
-#    container_name: kibana
-#    environment:
-#      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-#    ports:
-#      - "5601:5601"
-#    depends_on:
-#      - elasticsearch
-
   postgres:
     image: postgres:15
+    container_name: pg01
     ports:
       - "5433:5432"
-    environment:
-      # TODO: set env variables
-      POSTGRES_DB: restaurant_search
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
+    env_file:
+      - ./.env
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  postgres_py:
-    container_name: postgres_py
-    build:
-      dockerfile: postgres/Dockerfile
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      # TODO: set env variables
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: restaurant_search
-
-  elastic_py:
-    container_name: elastic_py
-    build:
-      dockerfile: elastic/Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: restaurant_search
-
-  app_py:
-    container_name: app_py
+  api:
+    container_name: api01
     build:
       dockerfile: app/Dockerfile
     depends_on:
-      - elastic_py
+      elastic:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     ports:
-      - "8501:8501"
+      - "8080:8080"
+    env_file:
+      - ./.env
 
-
-#  volumes:
-#    elasticsearch-data:
-#      driver: local
-#    kibanadata:
-#      driver: local
+  frontend:
+    container_name: frontend01
+    build:
+      dockerfile: app/frontend/Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env
