@@ -117,8 +117,7 @@ async def search_businesses(query: str):
         result = es.search(index=index_name, knn=knn_query, request_timeout=55)
 
         # Extract relevant information from the result
-        results_dict = [{'business_id': hit['_source']['business_id'],
-                         'score': hit['_score']}
+        results_dict = [{'business_id': hit['_source']['business_id'], 'score': hit['_score']}
                         for hit in result['hits']['hits']]
 
         for business in results_dict:

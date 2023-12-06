@@ -2,27 +2,46 @@ import streamlit as st
 import requests
 
 # Elasticsearch server URL
-API_URL = "http://elastic_py:8080"
+ELASTIC_API_URL = "http://api:8080/elastic"
+POSTGRES_API_URL = "http://api:8080/postgres"
 
 
-def upload_business():
-    url = f"{API_URL}/upload_data"
-    response = requests.post(url)
-    return response.json()
+# Function to upload data to Elasticsearch
+def upload_data():
+    try:
+        url_el = f"{ELASTIC_API_URL}/upload_data"
+        requests.post(url_el)
+
+        url_pg = f"{POSTGRES_API_URL}/upload_data"
+        requests.post(url_pg)
+        st.write({"message": "Data uploaded successfully to Elasticsearch and PostgreSQL"})
+    except Exception as e:
+        st.write(str(e))
 
 
-def get_business(business_id):
-    url = f"{API_URL}/{business_id}"
+# Function to get business by ID from PostgreSQL
+def get_postgres_business(business_id):
+    url = f"{POSTGRES_API_URL}/get_business/{business_id}"
     response = requests.get(url)
     return response.json()
 
 
-def search_businesses(query):
-    url = f"{API_URL}/search/{query}"
+# Function to search businesses in Elasticsearch
+def search_elastic_businesses(query):
+    url = f"{ELASTIC_API_URL}/search_elastic/{query}"
     response = requests.get(url)
-    return response.json()
+    return response
 
 
+def match_elastic_businesses(response_dict):
+    st.write(response_dict)
+    for business in response_dict:
+        st.write(business)
+        business['restaurant_info'] = get_postgres_business(business['business_id'])
+    return response_dict
+
+
+# Display restaurant card
 def display_restaurant_card(json_response, acc):
     # Display basic information
     restaurant_info = json_response["restaurant_info"]
@@ -54,14 +73,14 @@ def display_restaurant_card(json_response, acc):
 
 
 # Automatically upload data at start
-upload_business()
-st.title("Elasticsearch Restaurant Search")
+upload_data()
+st.title("Elasticsearch and PostgreSQL Restaurant Search")
 
 # Get Business by ID
 st.header("Get Business by ID")
 business_id_to_get = st.text_input("Enter Business ID to Retrieve")
 if st.button("Get Business"):
-    result = get_business(business_id_to_get)
+    result = get_postgres_business(business_id_to_get)
     st.write(result)
 
 # Search Businesses
@@ -69,8 +88,9 @@ st.header("Search Businesses")
 search_query = st.text_input("Enter Search Query")
 if st.button("Search"):
     st.title("Search Results:")
-    result = search_businesses(search_query)
+    result = search_elastic_businesses(search_query)
     if result:
+        result = match_elastic_businesses(result)
         for i, hit in enumerate(result):
             display_restaurant_card(hit, i)
     else:

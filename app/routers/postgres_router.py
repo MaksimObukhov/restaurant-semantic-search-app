@@ -29,7 +29,7 @@ async def upload_postgres_data():
 @postgres_router.get("/get_business/{business_id}")
 async def get_postgres_business(business_id: str):
     try:
-        business_info = postgres_functions.get_businesses(engine, 'business_table', business_id)
+        business_info = postgres_functions.get_businesses('business_table', business_id)
         return business_info
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

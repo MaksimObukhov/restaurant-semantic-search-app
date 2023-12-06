@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from routers.elastic_router import elastic_router
-from routers.postgres_router import postgres_router
+from app.routers.elastic_router import elastic_router
+from app.routers.postgres_router import postgres_router
 
 app = FastAPI()
 

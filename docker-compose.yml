@@ -2,7 +2,7 @@ version: '3'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: es01
+    container_name: es
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -17,7 +17,7 @@ services:
 
   postgres:
     image: postgres:15
-    container_name: pg01
+    container_name: pg
     ports:
       - "5433:5432"
     env_file:
@@ -29,11 +29,11 @@ services:
       retries: 5
 
   api:
-    container_name: api01
+    container_name: api
     build:
       dockerfile: app/Dockerfile
     depends_on:
-      elastic:
+      elasticsearch:
         condition: service_healthy
       postgres:
         condition: service_healthy
@@ -43,12 +43,12 @@ services:
       - ./.env
 
   frontend:
-    container_name: frontend01
+    container_name: frontend
     build:
       dockerfile: app/frontend/Dockerfile
     depends_on:
       - api
     ports:
-      - "8080:8080"
+      - "8501:8501"
     env_file:
       - ./.env
