@@ -8,7 +8,7 @@ import os
 from ast import literal_eval
 
 # TODO: change path for docker
-os.chdir("/Users/maksim/Documents/VSE/5. Semester/Text Analytics 2/semantic_search_restaurant")
+os.chdir("/")
 
 # Read your CSV file into a Pandas DataFrame
 df = pd.read_csv('data/reviews_elastic.csv').sample(1000, random_state=42, ignore_index=True)
