@@ -35,10 +35,10 @@ class ElasticFunctions:
 
         result = self.es.search(index=self.index_name, knn=knn_query, request_timeout=55)
 
-        results_dict = [{'business_id': hit['_source']['business_id'], 'score': hit['_score']}
+        results_list = [{'business_id': hit['_source']['business_id'], 'score': hit['_score']}
                         for hit in result['hits']['hits']]
 
-        return results_dict
+        return results_list
 
     def get_token(self, documents):
         sentences = [documents]

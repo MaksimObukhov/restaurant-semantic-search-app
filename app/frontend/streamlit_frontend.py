@@ -30,15 +30,13 @@ def get_postgres_business(business_id):
 def search_elastic_businesses(query):
     url = f"{ELASTIC_API_URL}/search_elastic/{query}"
     response = requests.get(url)
-    return response
+    return response.json()
 
 
-def match_elastic_businesses(response_dict):
-    st.write(response_dict)
-    for business in response_dict:
-        st.write(business)
+def match_elastic_businesses(response_list):
+    for business in response_list:
         business['restaurant_info'] = get_postgres_business(business['business_id'])
-    return response_dict
+    return response_list
 
 
 # Display restaurant card
