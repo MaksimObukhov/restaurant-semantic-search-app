@@ -1,20 +1,34 @@
 import streamlit as st
 import requests
+import os
 
-# Elasticsearch server URL
+# Check if data has been uploaded
+data_uploaded_flag_file = ".data_uploaded"
+data_uploaded = os.path.exists(data_uploaded_flag_file)
+
+# Server URL
 ELASTIC_API_URL = "http://api:8080/elastic"
 POSTGRES_API_URL = "http://api:8080/postgres"
 
 
-# Function to upload data to Elasticsearch
+# Function to upload data to Elasticsearch and PostgreSQL
 def upload_data():
     try:
-        url_el = f"{ELASTIC_API_URL}/upload_data"
-        requests.post(url_el)
+        # Check if data has been uploaded
+        if not data_uploaded:
+            url_el = f"{ELASTIC_API_URL}/upload_data"
+            requests.post(url_el)
 
-        url_pg = f"{POSTGRES_API_URL}/upload_data"
-        requests.post(url_pg)
-        st.write({"message": "Data uploaded successfully to Elasticsearch and PostgreSQL"})
+            url_pg = f"{POSTGRES_API_URL}/upload_data"
+            requests.post(url_pg)
+
+            # Create a flag file to indicate that data has been uploaded
+            with open(data_uploaded_flag_file, "w") as flag_file:
+                flag_file.write("Data uploaded")
+
+            st.success("Data uploaded successfully to Elasticsearch and PostgreSQL")
+        else:
+            st.success("Data has already been uploaded")
     except Exception as e:
         st.write(str(e))
 
