@@ -8,7 +8,7 @@ COPY ./app/main.py ./app/main.py
 COPY ./app/requirements.txt ./app/requirements.txt
 
 COPY ./data/businesses_postgres.csv ./data/businesses_postgres.csv
-COPY ./data/reviews_elastic_sample.csv ./data/reviews_elastic_sample.csv
+COPY ./data/embeddings_businesses_df.csv ./data/embeddings_businesses_df.csv
 
 COPY ./.env ./.env
 

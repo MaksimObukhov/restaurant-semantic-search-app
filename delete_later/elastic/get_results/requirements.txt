@@ -1,2 +1,0 @@
-pandas===1.5.3
-elasticsearch===8.11.0

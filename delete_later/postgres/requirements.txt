@@ -1,2 +1,0 @@
-sqlalchemy===1.4.39
-pandas===1.5.3

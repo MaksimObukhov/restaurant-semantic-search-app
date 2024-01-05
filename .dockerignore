@@ -1,3 +1,4 @@
 data/*
 !data/businesses_postgres.csv
 !data/reviews_elastic_sample.csv
+!data/embeddings_businesses_df.csv

@@ -35,10 +35,16 @@ class ElasticFunctions:
 
         result = self.es.search(index=self.index_name, knn=knn_query, request_timeout=55)
 
-        results_list = [{'business_id': hit['_source']['business_id'], 'score': hit['_score']}
-                        for hit in result['hits']['hits']]
+        response_body = [{'business_id': hit['_source']['business_id'], 'score': hit['_score']}
+                         for hit in result['hits']['hits']]
 
-        return results_list
+        unique_business_ids = set()
+
+        unique_dicts = [
+            d for d in response_body if d['business_id'] not in unique_business_ids and not unique_business_ids.add(d['business_id'])
+        ]
+
+        return unique_dicts
 
     def get_token(self, documents):
         sentences = [documents]

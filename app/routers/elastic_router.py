@@ -4,7 +4,8 @@ from app.db_upload.elastic_functions import ElasticFunctions
 elastic_router = APIRouter()
 elastic_functions = ElasticFunctions(index_name='restaurant_search')
 
-csv_file = 'data/reviews_elastic_sample.csv'
+# csv_file = 'data/reviews_elastic_sample.csv'
+csv_file = 'data/embeddings_businesses_df.csv'
 
 
 @elastic_router.post("/upload_data")

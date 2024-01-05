@@ -63,7 +63,7 @@ def display_restaurant_card(json_response, acc):
 
     # Column 1: Display photo
     # Add your photo_url logic here
-    photo_url = "https://5.imimg.com/data5/SELLER/Default/2020/9/JY/YB/UZ/5802447/restaurant-interior-designing-service-250x250.png"  # Replace with the actual photo URL
+    photo_url = "https://t3.ftcdn.net/jpg/03/24/73/92/360_F_324739203_keeq8udvv0P2h1MLYJ0GLSlTBagoXS48.jpg"
     col1.image(photo_url, use_column_width=True)
 
     # Column 2: Display information
@@ -86,20 +86,16 @@ def display_restaurant_card(json_response, acc):
 
 # Automatically upload data at start
 upload_data()
-st.title("Elasticsearch and PostgreSQL Restaurant Search")
 
-# Get Business by ID
-st.header("Get Business by ID")
-business_id_to_get = st.text_input("Enter Business ID to Retrieve")
-if st.button("Get Business"):
-    result = get_postgres_business(business_id_to_get)
-    st.write(result)
+# Title with Description
+st.title("Restaurants of Philadelphia")
+st.markdown("### Describe your desired restaurant and we will find it!")
 
-# Search Businesses
-st.header("Search Businesses")
-search_query = st.text_input("Enter Search Query")
+# Create the text input with JavaScript event handlers
+search_query = st.text_input("Today I'll have...", value="Cozy Italian trattoria with outdoor seating", max_chars=100, key="search_query")
+
 if st.button("Search"):
-    st.title("Search Results:")
+    st.title("Restaurants:")
     result = search_elastic_businesses(search_query)
     if result:
         result = match_elastic_businesses(result)
@@ -107,3 +103,4 @@ if st.button("Search"):
             display_restaurant_card(hit, i)
     else:
         st.write("No results found")
+
