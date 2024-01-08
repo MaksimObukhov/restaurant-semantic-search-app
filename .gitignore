@@ -1,5 +1,4 @@
 data/
 elasticsearch*/
-.env
 !data/businesses_postgres.csv
 !data/embeddings_businesses_df.csv
